@@ -1,0 +1,197 @@
+var myHp = 1 //Players hp
+var bHp = 1 //boss's hp
+var hpPotCount = 4 //Number of health pots
+var powerUp = false //powering up
+function gameStart() {
+	var difficulty = prompt("Choose your difficulty: Easy, Medium, or Hard").toLowerCase();
+	switch (difficulty) {
+		case ("easy"):
+			myHp = 10
+			bHp = 10
+			alert("Both you and the boss start off with 10hp! Good luck!")
+			break;
+		case ("medium"):
+			myHp = 7
+			bHp = 15
+			alert("You start off with 7hp, and the the boss with 15! Good luck!")
+			break;
+		case ("hard"):
+			myHp = 5
+			bHp = 17
+			hpPotCount = 6
+			alert("You start off with 5hp, and the boss with 17! Good luck! You're gonna need it.")
+			break;
+		default:
+			alert("Please select a difficulty; Easy, Medium, or Hard.")
+			gameStart()
+	}
+} //selects difficulty
+
+function game1() {
+	alert("Time to roll the dice!")
+	var dice = Math.ceil(Math.random() * 6)
+	var reroll = confirm("You roll a " + dice + "! If you wish you can reroll the dice by pressing cancel, but you can only do so once!")
+	if (reroll === false) {
+		dice = Math.ceil(Math.random() * 6)
+		alert("You rerolled and got " + dice + "!")
+	}
+	switch (dice) {
+		case (1):
+			myHp -= 4
+			alert("The boss did 4 damage to you, and knocked you away leaving you unable to attack back.")
+			break;
+		case (2):
+			myHp -= 2
+			bHp -= 5
+			alert("The boss swings at you dealing 2 damage, but you find an opening to inflict major damage, and reduce his hp by 5.")
+			break;
+		case (3):
+			myHp -= 4
+			bHp -= 4
+			alert("You and the boss traded hits and each dealt 4 damage to each other.")
+			break;
+		case (4):
+			bHp -= 3
+			alert("You parried the boss' attack and struck him dealing 3 damge.")
+			break;
+		case (5):
+			myHp -= 4
+			alert("What are you doing? You self inflict 4 damage while trying to attack.")
+			break;
+		case (6):
+			myHp -= 4
+			bHp -= 7
+			alert("You decide to dive to attack a risky opening taking 4 damage in the process, but dealing 7 damage.")
+			break;
+	}
+} //first stage of game
+
+function notify() {
+	if ((myHp > 0)&&(bHp > 0)) {
+		alert("You have " + myHp + " hp left with " + hpPotCount + " hp pots left. The boss has " + bHp + " hp left")
+		if ((myHp <= 4) && (hpPotCount > 0)) {
+			var useHpPot = confirm("Do you want to use an hp pot?")
+			if (useHpPot) {
+				hpPotCount--
+				myHp += 2
+				notify()
+			} else {
+				alert("Probably a bad decision. Fingers crossed you dont die!")
+			}
+		}
+	} else if(myHp<=0) {
+		var restart = confirm("You've died! Do you want to try again?")
+		if (restart) {
+			startGame1()
+		} else {
+			alert("Better luck next time!")
+		}
+	} else if(bHp<=0) {
+		alert("Congratulations! You have successfully beat the game!")
+	}
+} //tells player info after round, uses hp pot, and ends game
+
+function game2() {
+	alert("Oh no! The boss is getting ready to use his special move! What will you do?")
+	alert("Will you run around screaming, block, dodge, or parry?")
+	var action1 = prompt("Run, stand still, block, dodge, or parry?").toLowerCase()
+	switch (action1) {
+		case ("run"):
+			var run1 = Math.ceil(Math.random() * 2)
+			if (run1 === 1) {
+				alert("You start running in random directions while screaming at the top of your lungs! This causes the attack to miss, leaving you unscathed!")
+			} else {
+				alert("Why would you even try doing this. Nevertheless you dodge some of the damage only taking 5.")
+				myHp -= 5
+			}
+			break;
+		case ("block"):
+			alert("You attempted to block the the special attack but you didnt block it completely! You take 4 damage.")
+			myHp -= 4
+			break;
+		case ("dodge"):
+			var dodge1 = Math.ceil(Math.random() * 2)
+			if (dodge1 === 1) {
+				alert("You wait to see where he aims his attack and then move out of the way. The attack still nicks you dealing 3 damage.")
+				myHp -= 3
+			} else {
+				alert("You fully dodge the attack leaving you unscathed!")
+			}
+			break;
+		case ("parry"):
+			var parry1 = Math.ceil(Math.random() * 2)
+			if (parry1 === 1) {
+				alert("Why would you try to parry a special attack? Your just a man with a sword and this guy probably has a huge laser beam. Stupid. You take the full 8 damage.")
+				myHp -= 8
+			} else {
+				alert("You successfully fully parried the special attack by using a rune in your pouch, deflecting some of the damage! The boss take 5 damage.")
+				bHp -= 5
+			}
+			break;
+		default:
+			alert("You failed to make a decision!(or you misspelled; sucks to be you). You stand idle and take 8 damage from his special attack!")
+			myHp -= 8
+	}
+} //second stage of game
+
+function game3() {
+	alert("After using his special attack, the boss is extremely tired leaving itself wide open. What will you do?")
+	var action2 = prompt("Will you use your special attack, jump slash, thrust, or power up").toLowerCase()
+	switch (action2) {
+		case ("use special attack"):
+		case ("special attack"):
+			var specialChance = Math.ceil(Math.random() * 3)
+			if (specialChance === 1) {
+				alert("You've successully charged your rune and initiated your special attack! You deal 7 damage to the boss!")
+				bHp -= 7
+			} else if (specialChance === 2) {
+				alert("You screwed up the incantation for the rune and the spell blew in your face causing you to take 5 self incapitated damage.")
+				myHp -= 5
+			} else {
+				alert("While casting the spell the rune broke causing the spell break and your special attack to damage both you and the boss by 3!")
+				myHp-=3
+				bHp-=3
+			}
+			break;
+		case ("jump slash"):
+			var slashChance = Math.ceil(Math.random() * 2)
+			if (slashChance === 1) {
+				alert("You attempted to perform a jump slash and you end up slipping taking 1 damage")
+				myHp -= 1
+			} else {
+				alert("You successfully performed a powerful jump slash, dealing 5 damage.")
+				bHp -= 5
+			}
+			break;
+			case("thrust"):
+			var thrustChance = Math.ceil(Math.random()*5)
+			if(thrustChance === 5) {
+				alert("You were able to hit a vital with your thrust! You deal 6 damage with your trust!")
+				bHp-=6
+			} else {
+				alert("You deal an easy 3 damage with a thrust attack!")
+				bHp-=3
+			}
+			break;
+			case("power up"):
+			alert("YOU START POWERING UP! HAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHH!")
+			powerUp = true
+			break;
+		default:
+			alert("You chose not to do anything(or you typoed, sucks to be you). Nothing happens.")
+	} 
+} //third stage of the game
+
+function startGame1() {
+	gameStart()
+	game1()
+	notify()
+	game2()
+	notify()
+}
+var startGame = confirm("Are you ready to play?") //Initiates all the function calls
+if (startGame) {
+	startGame1()
+} else {
+	alert("Then why'd you click run?")
+}
